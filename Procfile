@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn codsoc.wsgi
+web: gunicorn fasolinka.wsgi
