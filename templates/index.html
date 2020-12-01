@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<style>
+    @-webkit-keyframes fade {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes expand {
+        0% {width: 100px;}
+        100% {width: 300px;}
+    }
+
+    #hello {
+        max-width: auto;
+        margin: 0 auto;
+        animation-name: expand;
+        animation-delay: 2s;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+
+    #content {
+        animation-name: fade;
+        animation-delay: 2.5s;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+    }
+</style>
+<div id="hello" class="mt-3" style="width: 100px;"></div>
+<div id="content" class="container-fluid" style="opacity: 0; text-align: center">
+    <p class="h2">Приветствую, Фасолинка.</p>
+    <p class="h3 text-muted">
+        Над миром нависла угроза, но в МИ-6 недостаточно сотрудников.
+        <br>
+        <br>
+        По нашим данным, вы являетесь единственным подходящим кандидатом
+        <br>
+        для выполнения нашего сверхсерктного задания.
+        <br>
+        <br>
+        Успешно выполнив все задачи, с вами свяжется наш агент и передаст вам награду.
+    </p>
+    <a href="{% url 'one' %}">
+        <button type="button" class="mt-2 btn btn-info btn-lg">Уделать МИ-6</button>
+    </a>
+</div>
+
+
+<script src="{% static 'lottie.js' %}"></script>
+<script type="text/javascript">
+    var animation = bodymovin.loadAnimation({
+        container: document.getElementById('hello'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/maninblack.json" %}'
+    })
+</script>
+
+{% endblock %}

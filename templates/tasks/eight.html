@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Финал{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'anim-styles/fade.css' %}">
+
+<div class="container">
+    <div id="wrong" style="display: none">
+        <div id="fail" style="width: 300px; margin: 0 auto"></div>
+    </div>
+    <div id="result" style="display:none; text-align: center">
+        <div id="success" style="width: 300px; margin: 0 auto;"></div>
+    </div>
+    <div id="problem" class="mt-3" style="">
+        <div class="jumbotron">
+            <h1 class="display-4">Дорогая Фасолинка,</h1>
+            <p class="lead">Ты проделала огромную и трудную работу!</p>
+            <hr class="my-4">
+            <p>
+                Ты по праву заслужила награду, но перед тем, как наш агент передаст ее тебе,
+                осталось одно последнее задание.
+                <br>
+                Мы не можем просто так сказать тебе место и время встречи, но мы уже дали тебе все необходимое,
+                чтобы ты поняла это сама.
+                <br>
+                Обрати внимание на адреса страниц, по которым ты переходила, чтобы выполнить задания.
+                <br>
+                Вспомни число одной очень важной даты в твоей жизни и сдвинь все буквы на него.
+                <br>
+                <h3>С нетерпением ждем встречи!</h3>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'lottie.js' %}"></script>
+<script type="text/javascript">
+    var fail = bodymovin.loadAnimation({
+        container: document.getElementById('fail'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/hmm.json" %}'
+    })
+    var success = bodymovin.loadAnimation({
+        container: document.getElementById('success'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/money.json" %}'
+    })
+</script>
+
+<script>
+    $("#answer-form").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'three' %}",
+            data: serializedData,
+            success: function (response) {
+                $("#wrong").css('display', 'none');
+                $("#answer-form").trigger('reset');
+                //
+                $("#result").css('display', 'block');
+                $("#result").addClass("fade");
+                //
+                $("#result").append(response["text"]);
+                $("#result").append(response["button"]);
+            },
+            error: function (response) {
+                $("#result").css('display', 'none');
+                $("#wrong").css('display', 'block');
+                $("#wrong").addClass("fade");
+            }
+        })
+    })
+</script>
+
+{% endblock %}

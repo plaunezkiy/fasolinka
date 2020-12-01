@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Уроки китайского{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'anim-styles/fade.css' %}">
+
+<div class="container">
+    <div id="wrong" style="display: none">
+        <div id="fail" style="width: 300px; margin: 0 auto"></div>
+    </div>
+    <div id="result" style="display:none; text-align: center">
+        <div id="success" style="width: 300px; margin: 0 auto;"></div>
+    </div>
+    <div id="problem" class="mt-3 fade" style="">
+        <div class="card" id="preamble">
+            <h5 class="card-header">
+                Задание:
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Продолжая наше расследование, мы перехватили разговор между двумя высокопоставленными сговорщиками.
+                    <br>
+                    Их техника немного старомодна, но только тебе под силу понять о чем они говорят.
+                    <br>
+                    Полевые агенты говорят, что это очень похоже на код морзе, но компьютеры пока не умеют его
+                    понимать.
+                    <br>
+                    Твоя задача понять где они встречаются, чтобы обсудить свои планы.
+                </p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <audio controls>
+                    <source src="{% static 'morse.wav' %}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        <div class="mt-3">
+            <form id="answer-form">
+                {% csrf_token %}
+                <input class="form-control" name="answer" placeholder="Место">
+                <button type="submit" class="btn btn-info btn-block mt-3">
+                    Проверить
+                </button>
+            </form>
+        </div>
+        <div class="card mt-3">
+            <h5 class="card-header">
+                Данные от коллег:
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Это может вам помочь:
+                    <a href="https://ru.wikipedia.org/wiki/Азбука_Морзе" target="_blank">
+                        Секретная ссылка
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'lottie.js' %}"></script>
+<script type="text/javascript">
+    var fail = bodymovin.loadAnimation({
+        container: document.getElementById('fail'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/nono.json" %}'
+    })
+    var success = bodymovin.loadAnimation({
+        container: document.getElementById('success'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/claps.json" %}'
+    })
+</script>
+
+<script>
+    $("#answer-form").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'four' %}",
+            data: serializedData,
+            success: function (response) {
+                $("#wrong").css('display', 'none');
+                $("#answer-form").trigger('reset');
+                //
+                $("#result").css('display', 'block');
+                $("#result").addClass("fade");
+                //
+                $("#result").append(response["text"]);
+                $("#result").append(response["button"]);
+            },
+            error: function (response) {
+                $("#result").css('display', 'none');
+                $("#wrong").css('display', 'block');
+                $("#wrong").addClass("fade");
+            }
+        })
+    })
+</script>
+
+{% endblock %}

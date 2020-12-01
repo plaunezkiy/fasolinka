@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Уроки китайского{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'anim-styles/fade.css' %}">
+
+<div class="container">
+    <div id="wrong" style="display: none">
+        <div id="fail" style="width: 300px; margin: 0 auto"></div>
+    </div>
+    <div id="result" style="display:none; text-align: center">
+        <div id="success" style="width: 300px; margin: 0 auto;"></div>
+    </div>
+    <div id="problem" class="mt-3" style="">
+        <div class="card" id="preamble">
+            <h5 class="card-header">
+                Задание:
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Возвращаясь к твоему заданию про банковские счета, мы почти получили к ним доступ,
+                    <br>
+                    Но мы не можем ответить на один секретный вопрос: кличка собаки основателя этой организации.
+                    <br>
+                    По нашим данным, у него есть некоторые проблемы с памятью, поэтому у него всегда есть записка с
+                    именем.
+                    <br>
+                    Но по его странным обычаям, он носит ее зашифрованной, поэтому ты должна угадать кличку.
+                    <h4>Удачи!</h4>
+                </p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <span class="rebusword" style="font-size:40px">
+                    <span class="rebus-symbol">
+                        <span class="rebus-symbol-emoji">🏦</span>
+                    </span>
+                    k=(d+i)+
+                    <span class="rebus-symbol">
+                        <span class="rebus-symbol-emoji">📺</span>
+                    </span>
+                    -v
+                </span>
+            </div>
+        </div>
+        <div class="mt-3">
+            <form id="answer-form">
+                {% csrf_token %}
+                <input class="form-control" name="answer" placeholder="Место">
+                <button type="submit" class="btn btn-info btn-block mt-3">
+                    Проверить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'lottie.js' %}"></script>
+<script type="text/javascript">
+    var fail = bodymovin.loadAnimation({
+        container: document.getElementById('fail'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/idk.json" %}'
+    })
+    var success = bodymovin.loadAnimation({
+        container: document.getElementById('success'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/nice.json" %}'
+    })
+</script>
+
+<script>
+    $("#answer-form").submit(function (e) {
+        e.preventDefault();
+        var serializedData = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'five' %}",
+            data: serializedData,
+            success: function (response) {
+                $("#wrong").css('display', 'none');
+                $("#answer-form").trigger('reset');
+                //
+                $("#result").css('display', 'block');
+                $("#result").addClass("fade");
+                //
+                $("#result").append(response["text"]);
+                $("#result").append(response["button"]);
+            },
+            error: function (response) {
+                $("#result").css('display', 'none');
+                $("#wrong").css('display', 'block');
+                $("#wrong").addClass("fade");
+            }
+        })
+    })
+</script>
+
+{% endblock %}
