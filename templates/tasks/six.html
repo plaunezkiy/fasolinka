@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Ого!{% endblock %}
+{% block title %}Тайны книг{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'anim-styles/fade.css' %}">
 
@@ -9,14 +9,53 @@
         <div id="fail" style="width: 300px; margin: 0 auto"></div>
     </div>
     <div id="result" style="display:none; text-align: center">
-        <!--<div id="success" style="width: 300px; margin: 0 auto;"></div>-->
+        <div id="success" style="width: 300px; margin: 0 auto;"></div>
     </div>
     <div id="problem" class="mt-3" style="">
-        <div class="jumbotron" style="text-align:center">
-            <h1 class="display-4">А ты молодец!</h1>
-            <p class="lead">На этом пока все, возвращайся за новыми заданиями 4 декабря.</p>
-            <hr class="my-4">
-            <div id="success" style="width: 300px; margin: 0 auto"></div>
+        <div class="card" id="preamble">
+            <h5 class="card-header">
+                Задание:
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Наши конспираторы, оказывается, любят читать, а еще и слушать музыку.
+                    <br>
+                    Они все делают отсылки к книгам середины 20 века и песням басты.
+                    <br>
+                    Мы перехватили шифр, в котором они обсуждают своего любимого кота,
+                    <br>
+                    имя которого поможет нашему
+                    агента попасть в круг доверия.
+                    <br>
+                    <h4>Ты знаешь что делать.</h4>
+                </p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <p class="card-text">
+                    248:5:4 430:3:4 120:12:1 120:26:2 249:22:4 121:24:7 248:22:3
+                </p>
+            </div>
+        </div>
+        <div class="mt-3">
+            <form id="answer-form">
+                {% csrf_token %}
+                <input class="form-control" name="answer" placeholder="Имя">
+                <button type="submit" class="btn btn-info btn-block mt-3">
+                    Проверить
+                </button>
+            </form>
+        </div>
+        <div class="card mt-3">
+            <h5 class="card-header">
+                Подсказка:
+            </h5>
+            <div class="card-body">
+                <p class="card-text">
+                    стра:стро:сло
+                </p>
+            </div>
         </div>
     </div>
 </div>
@@ -28,14 +67,14 @@
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: '{% static "animations/idk.json" %}'
+        path: '{% static "animations/whaaat.json" %}'
     })
     var success = bodymovin.loadAnimation({
         container: document.getElementById('success'),
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: '{% static "animations/waiting.json" %}'
+        path: '{% static "animations/singing.json" %}'
     })
 </script>
 
@@ -45,7 +84,7 @@
         var serializedData = $(this).serialize();
         $.ajax({
             type: 'POST',
-            url: "{% url 'five' %}",
+            url: "{% url 'seven' %}",
             data: serializedData,
             success: function (response) {
                 $("#wrong").css('display', 'none');

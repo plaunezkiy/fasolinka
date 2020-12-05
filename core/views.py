@@ -83,10 +83,30 @@ def five(request):
 
 
 def six(request):
+    if request.method == "POST":
+        if request.POST['answer'].lower() == 'берлиоз':
+            response = {
+                "text": "<p class='h1'>Лушче не бывает!</p>"
+                        "<p class='h3 text-muted'>Такими темпами, мы раскроем их организацию за пару дней</p>",
+                "button": f"<a href='{reverse('seven')}' style='text-decoration: none'><button class='btn "
+                          f"btn-block btn-success'>Перейти к следующему заданию</button></a>"
+            }
+            return JsonResponse(response)
+        return HttpResponse(status=400)
     return render(request, "six.html")
 
 
 def seven(request):
+    if request.method == "POST":
+        if request.POST['answer'].lower() == 'nice':
+            response = {
+                "text": "<p class='h1'>Great Job!</p>"
+                        "<p class='h3 text-muted'>Мы раскрыли все их секреты и поймали главных конспираторов!</p>",
+                "button": f"<a href='{reverse('eight')}' style='text-decoration: none'><button class='btn "
+                          f"btn-block btn-success'>Bonus Level</button></a>"
+            }
+            return JsonResponse(response)
+        return HttpResponse(status=400)
     return render(request, "seven.html")
 
 
