@@ -84,7 +84,7 @@
         var serializedData = $(this).serialize();
         $.ajax({
             type: 'POST',
-            url: "{% url 'seven' %}",
+            url: "{% url 'six' %}",
             data: serializedData,
             success: function (response) {
                 $("#wrong").css('display', 'none');
